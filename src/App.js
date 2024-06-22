@@ -48,6 +48,10 @@ const BudgetAdventureGame = () => {
   const [setupStep, setSetupStep] = useState(() => {
     return parseInt(localStorage.getItem('setupStep') || '0');
   });
+  const [totalSpent, setTotalSpent] = useState(() => {
+    const saved = localStorage.getItem('totalSpent');
+    return saved ? parseFloat(saved) : 0;
+  });
   const [selectedCategories, setSelectedCategories] = useState(() => {
     const saved = localStorage.getItem('selectedCategories');
     return saved ? JSON.parse(saved) : [];
@@ -108,6 +112,11 @@ const BudgetAdventureGame = () => {
     localStorage.setItem('currentMonth', currentMonth.toString());
     localStorage.setItem('currentYear', currentYear.toString());
   }, [totalIncome, gameStarted, setupStep, selectedCategories, categories, expenses, score, scoreBreakdown, streak, lastPlayDate, playerAchievements, currentMonth, currentYear]);
+  
+  useEffect(() => {
+    const newTotalSpent = expenses.reduce((total, exp) => total + exp.spent, 0);
+    setTotalSpent(newTotalSpent);
+  }, [expenses]);
 
   useEffect(() => {
     const today = new Date().toDateString();
@@ -152,8 +161,34 @@ const BudgetAdventureGame = () => {
   };
 
   const calculateScore = () => {
-    // ... (score calculation logic remains the same)
-  };
+  let newScore = 1000; // Base score
+  let newScoreBreakdown = { base: 1000 };
+
+  // Bonus for staying under budget
+  const totalBudget = categories.reduce((sum, cat) => sum + cat.budget, 0);
+  const totalSpent = expenses.reduce((sum, exp) => sum + exp.spent, 0);
+  if (totalSpent <= totalBudget) {
+    const budgetBonus = Math.floor((1 - totalSpent / totalBudget) * 500);
+    newScore += budgetBonus;
+    newScoreBreakdown.budgetBonus = budgetBonus;
+  }
+
+  // Penalty for overspending
+  const overspentCategories = expenses.filter(exp => exp.spent > exp.budget);
+  if (overspentCategories.length > 0) {
+    const overspendingPenalty = overspentCategories.length * 100;
+    newScore -= overspendingPenalty;
+    newScoreBreakdown.overspendingPenalty = -overspendingPenalty;
+  }
+
+  // Bonus for streak
+  const streakBonus = streak * 10;
+  newScore += streakBonus;
+  newScoreBreakdown.streakBonus = streakBonus;
+
+  setScore(newScore);
+  setScoreBreakdown(newScoreBreakdown);
+};
 
   const handleIncomeSubmit = () => {
     const income = parseFloat(incomeInput);
@@ -168,10 +203,10 @@ const BudgetAdventureGame = () => {
   const handleCategorySelection = (category) => {
     if (selectedCategories.includes(category)) {
       setSelectedCategories(prev => prev.filter(cat => cat !== category));
-    } else if (selectedCategories.length < 5) {
+    } else if (selectedCategories.length < 6) {
       setSelectedCategories(prev => [...prev, category]);
     } else {
-      setMessage('You can select up to 5 categories');
+      setMessage('You can select up to 6 categories');
     }
   };
 
@@ -217,7 +252,15 @@ const BudgetAdventureGame = () => {
     setMessage(`Selected: ${category.name}`);
   };
 
-  const handleAddExpense = () => {
+  const handleCategorySelection = (category) => {
+    if (selectedCategories.includes(category)) {
+      setSelectedCategories(prev => prev.filter(cat => cat !== category));
+    } else if (selectedCategories.length < 6) {
+      setSelectedCategories(prev => [...prev, category]);
+    } else {
+      setMessage('You can select up to 6 categories');
+    }
+  };const handleAddExpense = () => {
     if (selectedCategory && inputAmount && !isNaN(inputAmount)) {
       const amount = parseFloat(inputAmount);
       setExpenses(prevExpenses =>
@@ -227,6 +270,7 @@ const BudgetAdventureGame = () => {
             : exp
         )
       );
+      setTotalSpent(prev => prev + amount);
       setMessage(`Added $${amount} to ${selectedCategory.name}`);
       setInputAmount('');
       setSelectedCategory(null);
@@ -380,14 +424,19 @@ const BudgetAdventureGame = () => {
   }
 
   return (
+    return (
     <div className="budget-game" style={{maxWidth: '400px', margin: '0 auto', padding: '20px', fontFamily: 'Arial, sans-serif'}}>
       <h1 style={{textAlign: 'center', marginBottom: '20px'}}>Budget Adventure Game</h1>
       <div style={{textAlign: 'center', marginBottom: '20px'}}>
         <div style={{fontSize: '24px', fontWeight: 'bold'}}>Score: {score} 🌟</div>
         <div>Streak: {streak} days 🔥</div>
         <div>Current Month: {months[currentMonth]} {currentYear}</div>
-        <div style={{color: remainingBudget >= 0 ? 'green' : 'red'}}>
-          Remaining Budget: ${remainingBudget.toFixed(2)} / ${totalIncome.toFixed(2)}
+        {/* Modify these lines to show spent and remaining budget */}
+        <div style={{color: totalSpent <= totalIncome ? 'green' : 'red'}}>
+          Spent: ${totalSpent.toFixed(2)} / ${totalIncome.toFixed(2)}
+        </div>
+        <div style={{color: (totalIncome - totalSpent) >= 0 ? 'green' : 'red'}}>
+          Remaining: ${(totalIncome - totalSpent).toFixed(2)}
         </div>
       </div>
       <div style={{marginBottom: '20px'}}>
