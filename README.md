@@ -28,7 +28,7 @@ To run Savior locally on your machine, follow these steps:
 1. Ensure you have Node.js installed on your computer. If not, download and install it from [nodejs.org](https://nodejs.org/).
 
 2. Clone the repository:
-git clone https://github.com/yourusername/Savior.git
+git clone https://github.com/black28p/Savior.git
 cd Savior
 
 3. Install the required dependencies:
