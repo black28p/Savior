@@ -1,5 +1,6 @@
 import React from 'react';
 import { GAME_CONSTANTS } from '../config/gameConfig';
+import { allCategories } from '../config/gameConfig';
 
 const GameSetup = ({ gameState, setGameState }) => {
   const handleIncomeSubmit = () => {
