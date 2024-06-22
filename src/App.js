@@ -252,15 +252,7 @@ const BudgetAdventureGame = () => {
     setMessage(`Selected: ${category.name}`);
   };
 
-  const handleCategorySelection = (category) => {
-    if (selectedCategories.includes(category)) {
-      setSelectedCategories(prev => prev.filter(cat => cat !== category));
-    } else if (selectedCategories.length < 6) {
-      setSelectedCategories(prev => [...prev, category]);
-    } else {
-      setMessage('You can select up to 6 categories');
-    }
-  };const handleAddExpense = () => {
+  const handleAddExpense = () => {
     if (selectedCategory && inputAmount && !isNaN(inputAmount)) {
       const amount = parseFloat(inputAmount);
       setExpenses(prevExpenses =>
@@ -318,8 +310,9 @@ const BudgetAdventureGame = () => {
     setMessage('Game reset. Start over with new income and budgets.');
   };
 
-  if (!gameStarted) {
-    return (
+  return (
+  <>
+    {!gameStarted ? (
       <div className="budget-setup" style={{maxWidth: '400px', margin: '0 auto', padding: '20px', fontFamily: 'Arial, sans-serif'}}>
         <h1 style={{textAlign: 'center', marginBottom: '20px'}}>Budget Adventure Game</h1>
         {setupStep === 0 && (
@@ -349,7 +342,7 @@ const BudgetAdventureGame = () => {
         )}
         {setupStep === 1 && (
           <>
-            <h2>Select up to 5 Categories</h2>
+            <h2>Select up to 6 Categories</h2>
             <div style={{display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between'}}>
               {allCategories.map(category => (
                 <button
@@ -360,7 +353,7 @@ const BudgetAdventureGame = () => {
                     margin: '5px 0',
                     padding: '10px',
                     backgroundColor: selectedCategories.includes(category) ? category.color : '#f0f0f0',
-					color: selectedCategories.includes(category) ? 'white' : 'black',
+                    color: selectedCategories.includes(category) ? 'white' : 'black',
                     border: 'none',
                     borderRadius: '5px',
                     cursor: 'pointer'
@@ -420,133 +413,130 @@ const BudgetAdventureGame = () => {
         )}
         <div style={{textAlign: 'center', margin: '10px 0', color: '#666'}}>{message}</div>
       </div>
-    );
-  }
-
-  return (
-    return (
-    <div className="budget-game" style={{maxWidth: '400px', margin: '0 auto', padding: '20px', fontFamily: 'Arial, sans-serif'}}>
-      <h1 style={{textAlign: 'center', marginBottom: '20px'}}>Budget Adventure Game</h1>
-      <div style={{textAlign: 'center', marginBottom: '20px'}}>
-        <div style={{fontSize: '24px', fontWeight: 'bold'}}>Score: {score} 🌟</div>
-        <div>Streak: {streak} days 🔥</div>
-        <div>Current Month: {months[currentMonth]} {currentYear}</div>
-        {/* Modify these lines to show spent and remaining budget */}
-        <div style={{color: totalSpent <= totalIncome ? 'green' : 'red'}}>
-          Spent: ${totalSpent.toFixed(2)} / ${totalIncome.toFixed(2)}
-        </div>
-        <div style={{color: (totalIncome - totalSpent) >= 0 ? 'green' : 'red'}}>
-          Remaining: ${(totalIncome - totalSpent).toFixed(2)}
-        </div>
-      </div>
-      <div style={{marginBottom: '20px'}}>
-        <h3>Score Breakdown:</h3>
-        {Object.entries(scoreBreakdown).map(([key, value]) => (
-          <div key={key} style={{display: 'flex', justifyContent: 'space-between'}}>
-            <span>{key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}:</span>
-            <span>{value}</span>
+    ) : (
+      <div className="budget-game" style={{maxWidth: '400px', margin: '0 auto', padding: '20px', fontFamily: 'Arial, sans-serif'}}>
+        <h1 style={{textAlign: 'center', marginBottom: '20px'}}>Budget Adventure Game</h1>
+        <div style={{textAlign: 'center', marginBottom: '20px'}}>
+          <div style={{fontSize: '24px', fontWeight: 'bold'}}>Score: {score} 🌟</div>
+          <div>Streak: {streak} days 🔥</div>
+          <div>Current Month: {months[currentMonth]} {currentYear}</div>
+          <div style={{color: totalSpent <= totalIncome ? 'green' : 'red'}}>
+            Spent: ${totalSpent.toFixed(2)} / ${totalIncome.toFixed(2)}
           </div>
-        ))}
-      </div>
-      <div style={{display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', marginBottom: '20px'}}>
-        {categories.map(category => (
+          <div style={{color: (totalIncome - totalSpent) >= 0 ? 'green' : 'red'}}>
+            Remaining: ${(totalIncome - totalSpent).toFixed(2)}
+          </div>
+        </div>
+        <div style={{marginBottom: '20px'}}>
+          <h3>Score Breakdown:</h3>
+          {Object.entries(scoreBreakdown).map(([key, value]) => (
+            <div key={key} style={{display: 'flex', justifyContent: 'space-between'}}>
+              <span>{key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}:</span>
+              <span>{value}</span>
+            </div>
+          ))}
+        </div>
+        <div style={{display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', marginBottom: '20px'}}>
+          {categories.map(category => (
+            <button
+              key={category.name}
+              onClick={() => handleCategoryClick(category)}
+              style={{
+                width: '48%',
+                margin: '5px 0',
+                padding: '10px',
+                backgroundColor: category.color,
+                color: 'white',
+                border: 'none',
+                borderRadius: '5px',
+                cursor: 'pointer'
+              }}
+            >
+              <div style={{fontSize: '24px'}}>{category.icon}</div>
+              <div>{category.name}</div>
+            </button>
+          ))}
+        </div>
+        <input
+          type="number"
+          value={inputAmount}
+          onChange={(e) => setInputAmount(e.target.value)}
+          placeholder="Enter amount"
+          style={{width: '100%', padding: '10px', marginBottom: '10px', boxSizing: 'border-box'}}
+        />
+        <button
+          onClick={handleAddExpense}
+          style={{
+            width: '100%',
+            padding: '10px',
+            backgroundColor: '#3B82F6',
+            color: 'white',
+            border: 'none',
+            borderRadius: '5px',
+            cursor: 'pointer',
+            marginBottom: '10px'
+          }}
+        >
+          Add Expense
+        </button>
+        <div style={{display: 'flex', justifyContent: 'space-between', marginBottom: '10px'}}>
           <button
-            key={category.name}
-            onClick={() => handleCategoryClick(category)}
+            onClick={handleClearGame}
             style={{
               width: '48%',
-              margin: '5px 0',
               padding: '10px',
-              backgroundColor: category.color,
+              backgroundColor: '#10B981',
               color: 'white',
               border: 'none',
               borderRadius: '5px',
               cursor: 'pointer'
             }}
           >
-            <div style={{fontSize: '24px'}}>{category.icon}</div>
-            <div>{category.name}</div>
+            Clear Month
           </button>
-        ))}
+          <button
+            onClick={handleResetGame}
+            style={{
+              width: '48%',
+              padding: '10px',
+              backgroundColor: '#EF4444',
+              color: 'white',
+              border: 'none',
+              borderRadius: '5px',
+              cursor: 'pointer'
+            }}
+          >
+            Reset Game
+          </button>
+        </div>
+        <div style={{textAlign: 'center', margin: '10px 0', color: '#666'}}>{message}</div>
+        <div>
+          <h2>Expense Summary:</h2>
+          {expenses.map(exp => (
+            <div key={exp.name} style={{display: 'flex', justifyContent: 'space-between', marginBottom: '5px'}}>
+              <span>{exp.icon} {exp.name}</span>
+              <span>${exp.spent.toFixed(2)} / ${exp.budget.toFixed(2)}</span>
+            </div>
+          ))}
+        </div>
+        <div>
+          <h2>Achievements:</h2>
+          {playerAchievements.map(achievement => (
+            <div key={achievement.name} style={{
+              display: 'flex',
+              alignItems: 'center',
+              marginBottom: '5px',
+              opacity: achievement.reached ? 1 : 0.5
+            }}>
+              <span style={{fontSize: '24px', marginRight: '10px'}}>{achievement.icon}</span>
+              <span>{achievement.name}: {achievement.description}</span>
+            </div>
+          ))}
+        </div>
       </div>
-      <input
-        type="number"
-        value={inputAmount}
-        onChange={(e) => setInputAmount(e.target.value)}
-        placeholder="Enter amount"
-        style={{width: '100%', padding: '10px', marginBottom: '10px', boxSizing: 'border-box'}}
-      />
-      <button
-        onClick={handleAddExpense}
-        style={{
-          width: '100%',
-          padding: '10px',
-          backgroundColor: '#3B82F6',
-          color: 'white',
-          border: 'none',
-          borderRadius: '5px',
-          cursor: 'pointer',
-          marginBottom: '10px'
-        }}
-      >
-        Add Expense
-      </button>
-      <div style={{display: 'flex', justifyContent: 'space-between', marginBottom: '10px'}}>
-        <button
-          onClick={handleClearGame}
-          style={{
-            width: '48%',
-            padding: '10px',
-            backgroundColor: '#10B981',
-            color: 'white',
-            border: 'none',
-            borderRadius: '5px',
-            cursor: 'pointer'
-          }}
-        >
-          Clear Month
-        </button>
-        <button
-          onClick={handleResetGame}
-          style={{
-            width: '48%',
-            padding: '10px',
-            backgroundColor: '#EF4444',
-            color: 'white',
-            border: 'none',
-            borderRadius: '5px',
-            cursor: 'pointer'
-          }}
-        >
-          Reset Game
-        </button>
-      </div>
-      <div style={{textAlign: 'center', margin: '10px 0', color: '#666'}}>{message}</div>
-      <div>
-        <h2>Expense Summary:</h2>
-        {expenses.map(exp => (
-          <div key={exp.name} style={{display: 'flex', justifyContent: 'space-between', marginBottom: '5px'}}>
-            <span>{exp.icon} {exp.name}</span>
-            <span>${exp.spent.toFixed(2)} / ${exp.budget.toFixed(2)}</span>
-          </div>
-        ))}
-      </div>
-      <div>
-        <h2>Achievements:</h2>
-        {playerAchievements.map(achievement => (
-          <div key={achievement.name} style={{
-            display: 'flex',
-            alignItems: 'center',
-            marginBottom: '5px',
-            opacity: achievement.reached ? 1 : 0.5
-          }}>
-            <span style={{fontSize: '24px', marginRight: '10px'}}>{achievement.icon}</span>
-            <span>{achievement.name}: {achievement.description}</span>
-          </div>
-        ))}
-      </div>
-    </div>
+    )}
+    </>
   );
-};
+}; 
 
 export default BudgetAdventureGame;
