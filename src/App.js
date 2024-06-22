@@ -539,4 +539,30 @@ const BudgetAdventureGame = () => {
   );
 }; 
 
+// Define your styles
+const styles = `
+  .game-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+  }
+  .game-content {
+    max-width: 600px;
+    width: 100%;
+    text-align: center;
+  }
+  @media (max-width: 768px) {
+    .game-content {
+      max-width: 100%;
+    }
+  }
+`;
+
+// Apply the styles
+const styleElement = document.createElement('style');
+styleElement.innerHTML = styles;
+document.head.appendChild(styleElement);
+
 export default BudgetAdventureGame;
