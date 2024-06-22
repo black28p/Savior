@@ -271,6 +271,29 @@ const BudgetAdventureGame = () => {
       setMessage('Please select a category and enter a valid amount');
     }
   };
+  
+  const handleEditExpense = (categoryName, newAmount) => {
+    setExpenses(prevExpenses =>
+      prevExpenses.map(exp =>
+        exp.name === categoryName
+          ? { ...exp, spent: parseFloat(newAmount) }
+          : exp
+      )
+    );
+    setTotalSpent(prev => prev - expenses.find(exp => exp.name === categoryName).spent + parseFloat(newAmount));
+    setMessage(`Updated expense for ${categoryName}`);
+    calculateScore();
+  };
+
+  const handleDeleteExpense = (categoryName) => {
+    const expenseToDelete = expenses.find(exp => exp.name === categoryName);
+    setExpenses(prevExpenses => prevExpenses.map(exp =>
+      exp.name === categoryName ? { ...exp, spent: 0 } : exp
+    ));
+    setTotalSpent(prev => prev - expenseToDelete.spent);
+    setMessage(`Deleted expense for ${categoryName}`);
+    calculateScore();
+  };
 
   const handleClearGame = () => {
     setExpenses(categories.map(cat => ({ ...cat, spent: 0 })));
@@ -513,9 +536,55 @@ const BudgetAdventureGame = () => {
         <div>
           <h2>Expense Summary:</h2>
           {expenses.map(exp => (
-            <div key={exp.name} style={{display: 'flex', justifyContent: 'space-between', marginBottom: '5px'}}>
+            <div key={exp.name} style={{
+              display: 'flex', 
+              justifyContent: 'space-between', 
+              alignItems: 'center', 
+              marginBottom: '10px',
+              padding: '10px',
+              backgroundColor: '#f0f0f0',
+              borderRadius: '5px'
+            }}>
               <span>{exp.icon} {exp.name}</span>
               <span>${exp.spent.toFixed(2)} / ${exp.budget.toFixed(2)}</span>
+              <div>
+                <button 
+                  onClick={() => {
+                    const newAmount = prompt(`Enter new amount for ${exp.name}:`, exp.spent);
+                    if (newAmount !== null && !isNaN(newAmount)) {
+                      handleEditExpense(exp.name, newAmount);
+                    }
+                  }}
+                  style={{
+                    marginRight: '5px',
+                    padding: '5px 10px',
+                    backgroundColor: '#3B82F6',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '3px',
+                    cursor: 'pointer'
+                  }}
+                >
+                  Edit
+                </button>
+                <button 
+                  onClick={() => {
+                    if (window.confirm(`Are you sure you want to delete the expense for ${exp.name}?`)) {
+                      handleDeleteExpense(exp.name);
+                    }
+                  }}
+                  style={{
+                    padding: '5px 10px',
+                    backgroundColor: '#EF4444',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '3px',
+                    cursor: 'pointer'
+                  }}
+                >
+                  Delete
+                </button>
+              </div>
             </div>
           ))}
         </div>
@@ -535,10 +604,9 @@ const BudgetAdventureGame = () => {
         </div>
       </div>
     )}
-    </>
-  );
-}; 
-
+  </>
+);
+};
 // Define your styles
 const styles = `
   .game-container {
