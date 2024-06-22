@@ -24,6 +24,18 @@ const allCategories = [
   { name: 'Subscriptions', color: '#2980B9', icon: '📱' },
 ];
 
+const achievements = [
+  { name: 'Saver Starter', description: 'Reach your savings goal', icon: '🌱', reached: false },
+  { name: 'Budget Master', description: 'Stay under budget for a week', icon: '🏆', reached: false },
+  { name: 'Expense Ninja', description: 'Track expenses for 5 days in a row', icon: '🥷', reached: false },
+  { name: 'Category Conqueror', description: 'Stay under budget in all categories for a month', icon: '🏅', reached: false },
+  { name: 'Savings Superstar', description: 'Save 20% of your income for 3 months in a row', icon: '🌟', reached: false },
+];
+
+const months = [
+  'January', 'February', 'March', 'April', 'May', 'June',
+  'July', 'August', 'September', 'October', 'November', 'December'
+];
 
 const FinancialAdventureGame = () => {
   const [totalIncome, setTotalIncome] = useState(() => {
