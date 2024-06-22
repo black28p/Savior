@@ -82,9 +82,12 @@ const GameSetup = ({ gameState, setGameState }) => {
           <input
             type="number"
             value={gameState.incomeInput}
-            onChange={(e) => setGameState(prevState => ({ incomeInput: e.target.value }))}
-            placeholder="Enter your starting monthly income"
-            className="w-full p-2 mb-4 border rounded"
+            onChange={(e) => {
+              console.log('Input value:', e.target.value);
+              updateGameState({ incomeInput: e.target.value });
+             }}
+             placeholder="Enter your starting monthly income"
+             className="w-full p-2 mb-4 border rounded"
           />
           <button
             onClick={handleIncomeSubmit}

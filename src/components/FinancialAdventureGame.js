@@ -1,31 +1,20 @@
 import React from 'react';
 import useGameState from '../hooks/useGameState';
 import GameSetup from './GameSetup';
-import CategorySelection from './CategorySelection';
-import BudgetAllocation from './BudgetAllocation';
-
-const GameInterface = ({ gameState, setGameState }) => {
-  // Implement your main game interface here
-  return (
-    <div>
-      <h1>Game Interface</h1>
-      <CategorySelection gameState={gameState} setGameState={setGameState} />
-      <BudgetAllocation gameState={gameState} setGameState={setGameState} />
-      {/* Add other game components as needed */}
-    </div>
-  );
-};
+import GameInterface from './GameInterface';
 
 const FinancialAdventureGame = () => {
-  const [gameState, setGameState] = useGameState();
+  const [gameState, updateGameState] = useGameState();
+
+  console.log('Current game state:', gameState);
 
   return (
     <div className="flex justify-center items-center min-h-screen p-5 bg-gray-100">
       <div className="max-w-4xl w-full bg-white rounded-lg shadow-md p-8">
         {!gameState.gameStarted ? (
-          <GameSetup gameState={gameState} setGameState={setGameState} />
+          <GameSetup gameState={gameState} setGameState={updateGameState} />
         ) : (
-          <GameInterface gameState={gameState} setGameState={setGameState} />
+          <GameInterface gameState={gameState} setGameState={updateGameState} />
         )}
       </div>
     </div>
