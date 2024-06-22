@@ -2,9 +2,10 @@ import React from 'react';
 
 const locations = ['Home', 'Work District', 'Shopping Center', 'Financial District', 'Park', 'University'];
 
-const CityMap = ({ gameState, setGameState }) => {
+const CityMap = ({ gameState, updateGameState }) => {
   const handleLocationChange = (newLocation) => {
-    setGameState(prevState => ({
+    updateGameState(prevState => ({
+      ...prevState,
       currentLocation: newLocation,
       story: updateStoryBasedOnLocation(newLocation)
     }));
@@ -31,14 +32,14 @@ const CityMap = ({ gameState, setGameState }) => {
   };
 
   return (
-    <div className="mb-6">
-      <h2 className="text-xl font-semibold mb-2">Prosperity City Map</h2>
+    <div className="mb-6 text-white">
+      <h2 className="text-xl font-semibold mb-2 text-blue-200">Prosperity City Map</h2>
       <div className="grid grid-cols-3 gap-2">
         {locations.map(location => (
           <button
             key={location}
             onClick={() => handleLocationChange(location)}
-            className={`p-2 rounded ${gameState.currentLocation === location ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
+            className={`p-2 rounded ${gameState.currentLocation === location ? 'bg-blue-600 text-white' : 'bg-gray-700 text-gray-200 hover:bg-gray-600'}`}
           >
             {location}
           </button>

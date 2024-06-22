@@ -3,14 +3,18 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
+const webpack = require('webpack');
 
 module.exports = (env, argv) => {
   const isProduction = argv.mode === 'production';
   return {
-    entry: './src/index.js',
+    entry: {
+      main: './src/index.js',
+    },
     output: {
       path: path.resolve(__dirname, 'build'),
-      filename: isProduction ? '[name].[contenthash].js' : 'bundle.js',
+      filename: isProduction ? '[name].[contenthash].js' : '[name].bundle.js',
+      chunkFilename: isProduction ? '[name].[contenthash].chunk.js' : '[name].chunk.js',
       publicPath: isProduction ? '/Savior/' : '/'
     },
     module: {
@@ -38,12 +42,14 @@ module.exports = (env, argv) => {
       extensions: ['.js', '.jsx'],
       alias: {
         '@': path.resolve(__dirname, 'src'),
+        'react': path.resolve(__dirname, 'node_modules/react'),
       },
     },
     plugins: [
       new CleanWebpackPlugin(),
       new HtmlWebpackPlugin({
         template: './public/index.html',
+        chunks: ['main'],
       }),
       new CopyWebpackPlugin({
         patterns: [
@@ -52,17 +58,19 @@ module.exports = (env, argv) => {
       }),
       isProduction && new MiniCssExtractPlugin({
         filename: '[name].[contenthash].css'
-      })
+      }),
+      new webpack.HotModuleReplacementPlugin(),
     ].filter(Boolean),
     devServer: {
       historyApiFallback: true,
       hot: true,
-      open: true
+      open: true,
     },
     devtool: isProduction ? 'source-map' : 'eval-source-map',
     optimization: {
       splitChunks: {
         chunks: 'all',
+        name: false,
       },
     },
   };

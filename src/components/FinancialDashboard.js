@@ -2,7 +2,7 @@ import React from 'react';
 import { months } from '../config/gameConfig';
 
 const FinancialDashboard = ({ gameState }) => {
-  const { currentMonth, currentYear, totalSpent, totalIncome } = gameState;
+  const { currentMonth = 0, currentYear = new Date().getFullYear(), totalSpent = 0, totalIncome = 0 } = gameState;
 
   return (
     <div>

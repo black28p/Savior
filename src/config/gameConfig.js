@@ -55,29 +55,25 @@ export const initialQuests = [
 
 // Initial game state
 export const initialGameState = {
-  totalIncome: 0,
-  incomeInput: '',
-  gameStarted: false,
   setupStep: 0,
+  incomeInput: '',
+  currentLocation: 'Home',
+  totalIncome: 0,
+  currentMonth: 0,
+  currentYear: new Date().getFullYear(),
   totalSpent: 0,
+  categoryInputs: {},
   selectedCategories: [],
   categories: [],
-  categoryInputs: {},
   expenses: [],
+  questLog: [],
+  playerAchievements: [],
+  playerLevel: 1,
+  score: 0,
   selectedCategory: null,
   inputAmount: '',
   message: '',
-  score: 1000,
-  scoreBreakdown: { base: 1000 },
-  streak: 0,
-  lastPlayDate: null,
-  playerAchievements: achievements,
-  currentMonth: new Date().getMonth(),
-  currentYear: new Date().getFullYear(),
-  currentLocation: 'Home',
-  questLog: initialQuests,
-  playerLevel: 1,
-  story: 'Welcome to Prosperity City! Your financial adventure begins...'
+  gameStarted: false,
 };
 
 // Story templates

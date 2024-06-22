@@ -4,6 +4,7 @@ import { storyTemplates } from '../config/gameConfig';
 const BudgetAllocation = ({ gameState, setGameState }) => {
   const handleCategoryBudgetChange = (category, value) => {
     setGameState(prevState => ({
+      ...prevState,
       categoryInputs: {...prevState.categoryInputs, [category]: value}
     }));
   };
@@ -16,46 +17,47 @@ const BudgetAllocation = ({ gameState, setGameState }) => {
     }));
 
     if (budgets.some(cat => isNaN(cat.budget) || cat.budget < 0)) {
-      setGameState({ message: 'Please enter valid budget amounts for all categories' });
+      setGameState(prevState => ({ ...prevState, message: 'Please enter valid budget amounts for all categories' }));
       return;
     }
 
     const totalBudget = budgets.reduce((sum, cat) => sum + cat.budget, 0);
     if (totalBudget > gameState.totalIncome) {
-      setGameState({ message: 'Total category budgets exceed your income. Please adjust.' });
+      setGameState(prevState => ({ ...prevState, message: 'Total category budgets exceed your income. Please adjust.' }));
       return;
     }
 
-    setGameState({
+    setGameState(prevState => ({
+      ...prevState,
       categories: budgets,
       expenses: budgets.map(cat => ({ ...cat, spent: 0 })),
       gameStarted: true,
       story: storyTemplates.gameStart
-    });
+    }));
   };
 
   return (
-    <>
-      <h2 className="text-xl font-semibold mb-4">Allocate Your Monthly Budget</h2>
+    <div className="text-white">
+      <h2 className="text-xl font-semibold mb-4 text-blue-200">Allocate Your Monthly Budget</h2>
       {gameState.selectedCategories.map(cat => (
         <div key={cat.name} className="mb-4">
-          <label className="block mb-2">{cat.name}</label>
+          <label className="block mb-2 text-gray-300">{cat.name}</label>
           <input
             type="number"
             value={gameState.categoryInputs[cat.name]}
             onChange={(e) => handleCategoryBudgetChange(cat.name, e.target.value)}
             placeholder={`Enter budget for ${cat.name}`}
-            className="w-full p-2 border rounded"
+            className="w-full p-2 border rounded bg-gray-800 text-white border-gray-700"
           />
         </div>
       ))}
       <button
         onClick={handleCategoryBudgetsSubmit}
-        className="w-full p-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
+        className="w-full p-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors"
       >
         Start Your Financial Adventure!
       </button>
-    </>
+    </div>
   );
 };
 
