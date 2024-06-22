@@ -1,23 +1,22 @@
 import React from 'react';
-import { GAME_CONSTANTS } from '../config/gameConfig';
-import { allCategories } from '../config/gameConfig';
+import { GAME_CONSTANTS, allCategories } from '../config/gameConfig';
 
-const GameSetup = ({ gameState, setGameState }) => {
+const GameSetup = ({ gameState, updateGameState }) => {
   const handleIncomeSubmit = () => {
     const income = parseFloat(gameState.incomeInput);
     if (!isNaN(income) && income > 0) {
-      setGameState(prevState => ({
+      updateGameState({
         totalIncome: income,
         setupStep: 1,
         story: `Great! You're starting your journey with a monthly income of $${income}. Now, let's choose your financial priorities.`
-      }));
+      });
     } else {
-      setGameState(prevState => ({ message: 'Please enter a valid income amount' }));
+      updateGameState({ message: 'Please enter a valid income amount' });
     }
   };
 
   const handleCategorySelection = (category) => {
-    setGameState(prevState => {
+    updateGameState(prevState => {
       if (prevState.selectedCategories.includes(category)) {
         return { selectedCategories: prevState.selectedCategories.filter(cat => cat !== category) };
       } else if (prevState.selectedCategories.length < GAME_CONSTANTS.MAX_CATEGORIES) {
@@ -30,19 +29,19 @@ const GameSetup = ({ gameState, setGameState }) => {
 
   const handleCategorySelectionComplete = () => {
     if (gameState.selectedCategories.length > 0) {
-      setGameState(prevState => ({
+      updateGameState(prevState => ({
         categories: prevState.selectedCategories.map(cat => ({ ...cat, budget: 0 })),
         categoryInputs: prevState.selectedCategories.reduce((acc, cat) => ({...acc, [cat.name]: ''}), {}),
         setupStep: 2,
         story: "Excellent choices! Now, let's allocate your income across these categories. Remember, balancing your budget is key to financial success!"
       }));
     } else {
-      setGameState(prevState => ({ message: 'Please select at least one category' }));
+      updateGameState({ message: 'Please select at least one category' });
     }
   };
 
   const handleCategoryBudgetChange = (category, value) => {
-    setGameState(prevState => ({
+    updateGameState(prevState => ({
       categoryInputs: {...prevState.categoryInputs, [category]: value}
     }));
   };
@@ -55,22 +54,22 @@ const GameSetup = ({ gameState, setGameState }) => {
     }));
 
     if (budgets.some(cat => isNaN(cat.budget) || cat.budget < 0)) {
-      setGameState(prevState => ({ message: 'Please enter valid budget amounts for all categories' }));
+      updateGameState({ message: 'Please enter valid budget amounts for all categories' });
       return;
     }
 
     const totalBudget = budgets.reduce((sum, cat) => sum + cat.budget, 0);
     if (totalBudget > gameState.totalIncome) {
-      setGameState(prevState => ({ message: 'Total category budgets exceed your income. Please adjust.' }));
+      updateGameState({ message: 'Total category budgets exceed your income. Please adjust.' });
       return;
     }
 
-    setGameState(prevState => ({
+    updateGameState({
       categories: budgets,
       expenses: budgets.map(cat => ({ ...cat, spent: 0 })),
       gameStarted: true,
       story: "Congratulations! You've set up your initial budget. Your adventure in Prosperity City begins now. Explore the city, complete quests, and make wise financial decisions to prosper!"
-    }));
+    });
   };
 
   return (
@@ -85,9 +84,9 @@ const GameSetup = ({ gameState, setGameState }) => {
             onChange={(e) => {
               console.log('Input value:', e.target.value);
               updateGameState({ incomeInput: e.target.value });
-             }}
-             placeholder="Enter your starting monthly income"
-             className="w-full p-2 mb-4 border rounded"
+            }}
+            placeholder="Enter your starting monthly income"
+            className="w-full p-2 mb-4 border rounded"
           />
           <button
             onClick={handleIncomeSubmit}
@@ -101,7 +100,7 @@ const GameSetup = ({ gameState, setGameState }) => {
         <>
           <h2 className="text-xl font-semibold mb-4">Select up to {GAME_CONSTANTS.MAX_CATEGORIES} Financial Categories</h2>
           <div className="grid grid-cols-2 gap-2 mb-4">
-            {gameState.allCategories.map(category => (
+            {allCategories.map(category => (
               <button
                 key={category.name}
                 onClick={() => handleCategorySelection(category)}
