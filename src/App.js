@@ -333,278 +333,295 @@ const BudgetAdventureGame = () => {
     setMessage('Game reset. Start over with new income and budgets.');
   };
 
-  return (
-  <>
-    {!gameStarted ? (
-      <div className="budget-setup" style={{maxWidth: '400px', margin: '0 auto', padding: '20px', fontFamily: 'Arial, sans-serif'}}>
-        <h1 style={{textAlign: 'center', marginBottom: '20px'}}>Budget Adventure Game</h1>
-        {setupStep === 0 && (
-          <>
-            <input
-              type="number"
-              value={incomeInput}
-              onChange={(e) => setIncomeInput(e.target.value)}
-              placeholder="Enter your monthly income"
-              style={{width: '100%', padding: '10px', marginBottom: '10px', boxSizing: 'border-box'}}
-            />
-            <button
-              onClick={handleIncomeSubmit}
-              style={{
-                width: '100%',
-                padding: '10px',
-                backgroundColor: '#3B82F6',
-                color: 'white',
-                border: 'none',
-                borderRadius: '5px',
-                cursor: 'pointer'
-              }}
-            >
-              Set Income
-            </button>
-          </>
-        )}
-        {setupStep === 1 && (
-          <>
-            <h2>Select up to 6 Categories</h2>
-            <div style={{display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between'}}>
-              {allCategories.map(category => (
-                <button
-                  key={category.name}
-                  onClick={() => handleCategorySelection(category)}
-                  style={{
-                    width: '48%',
-                    margin: '5px 0',
-                    padding: '10px',
-                    backgroundColor: selectedCategories.includes(category) ? category.color : '#f0f0f0',
-                    color: selectedCategories.includes(category) ? 'white' : 'black',
-                    border: 'none',
-                    borderRadius: '5px',
-                    cursor: 'pointer'
-                  }}
-                >
-                  {category.icon} {category.name}
-                </button>
+ return (
+  <div style={{
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    minHeight: '100vh',
+    padding: '20px',
+    backgroundColor: '#f0f0f0'
+  }}>
+    <div style={{
+      maxWidth: '600px',
+      width: '100%',
+      textAlign: 'center',
+      backgroundColor: 'white',
+      borderRadius: '10px',
+      padding: '30px',
+      boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)'
+    }}>
+      {!gameStarted ? (
+        <div style={{fontFamily: 'Arial, sans-serif'}}>
+          <h1 style={{textAlign: 'center', marginBottom: '20px'}}>Budget Adventure Game</h1>
+          {setupStep === 0 && (
+            <>
+              <input
+                type="number"
+                value={incomeInput}
+                onChange={(e) => setIncomeInput(e.target.value)}
+                placeholder="Enter your monthly income"
+                style={{width: '100%', padding: '10px', marginBottom: '10px', boxSizing: 'border-box'}}
+              />
+              <button
+                onClick={handleIncomeSubmit}
+                style={{
+                  width: '100%',
+                  padding: '10px',
+                  backgroundColor: '#3B82F6',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '5px',
+                  cursor: 'pointer'
+                }}
+              >
+                Set Income
+              </button>
+            </>
+          )}
+          {setupStep === 1 && (
+            <>
+              <h2>Select up to 6 Categories</h2>
+              <div style={{display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between'}}>
+                {allCategories.map(category => (
+                  <button
+                    key={category.name}
+                    onClick={() => handleCategorySelection(category)}
+                    style={{
+                      width: '48%',
+                      margin: '5px 0',
+                      padding: '10px',
+                      backgroundColor: selectedCategories.includes(category) ? category.color : '#f0f0f0',
+                      color: selectedCategories.includes(category) ? 'white' : 'black',
+                      border: 'none',
+                      borderRadius: '5px',
+                      cursor: 'pointer'
+                    }}
+                  >
+                    {category.icon} {category.name}
+                  </button>
+                ))}
+              </div>
+              <button
+                onClick={handleCategorySelectionComplete}
+                style={{
+                  width: '100%',
+                  padding: '10px',
+                  backgroundColor: '#3B82F6',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '5px',
+                  cursor: 'pointer',
+                  marginTop: '20px'
+                }}
+              >
+                Continue
+              </button>
+            </>
+          )}
+          {setupStep === 2 && (
+            <>
+              <h2>Set Your Category Budgets</h2>
+              {selectedCategories.map(cat => (
+                <div key={cat.name} style={{marginBottom: '10px'}}>
+                  <label>{cat.name}</label>
+                  <input
+                    type="number"
+                    value={categoryInputs[cat.name]}
+                    onChange={(e) => handleCategoryBudgetChange(cat.name, e.target.value)}
+                    placeholder={`Enter budget for ${cat.name}`}
+                    style={{width: '100%', padding: '10px', boxSizing: 'border-box'}}
+                  />
+                </div>
               ))}
+              <button
+                onClick={handleCategoryBudgetsSubmit}
+                style={{
+                  width: '100%',
+                  padding: '10px',
+                  backgroundColor: '#3B82F6',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '5px',
+                  cursor: 'pointer'
+                }}
+              >
+                Start Game
+              </button>
+            </>
+          )}
+          <div style={{textAlign: 'center', margin: '10px 0', color: '#666'}}>{message}</div>
+        </div>
+      ) : (
+        <div style={{fontFamily: 'Arial, sans-serif'}}>
+          <h1 style={{textAlign: 'center', marginBottom: '20px'}}>Budget Adventure Game</h1>
+          <div style={{textAlign: 'center', marginBottom: '20px'}}>
+            <div style={{fontSize: '24px', fontWeight: 'bold'}}>Score: {score} 🌟</div>
+            <div>Streak: {streak} days 🔥</div>
+            <div>Current Month: {months[currentMonth]} {currentYear}</div>
+            <div style={{color: totalSpent <= totalIncome ? 'green' : 'red'}}>
+              Spent: ${totalSpent.toFixed(2)} / ${totalIncome.toFixed(2)}
             </div>
-            <button
-              onClick={handleCategorySelectionComplete}
-              style={{
-                width: '100%',
-                padding: '10px',
-                backgroundColor: '#3B82F6',
-                color: 'white',
-                border: 'none',
-                borderRadius: '5px',
-                cursor: 'pointer',
-                marginTop: '20px'
-              }}
-            >
-              Continue
-            </button>
-          </>
-        )}
-        {setupStep === 2 && (
-          <>
-            <h2>Set Your Category Budgets</h2>
-            {selectedCategories.map(cat => (
-              <div key={cat.name} style={{marginBottom: '10px'}}>
-                <label>{cat.name}</label>
-                <input
-                  type="number"
-                  value={categoryInputs[cat.name]}
-                  onChange={(e) => handleCategoryBudgetChange(cat.name, e.target.value)}
-                  placeholder={`Enter budget for ${cat.name}`}
-                  style={{width: '100%', padding: '10px', boxSizing: 'border-box'}}
-                />
+            <div style={{color: (totalIncome - totalSpent) >= 0 ? 'green' : 'red'}}>
+              Remaining: ${(totalIncome - totalSpent).toFixed(2)}
+            </div>
+          </div>
+          <div style={{marginBottom: '20px'}}>
+            <h3>Score Breakdown:</h3>
+            {Object.entries(scoreBreakdown).map(([key, value]) => (
+              <div key={key} style={{display: 'flex', justifyContent: 'space-between'}}>
+                <span>{key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}:</span>
+                <span>{value}</span>
               </div>
             ))}
-            <button
-              onClick={handleCategoryBudgetsSubmit}
-              style={{
-                width: '100%',
-                padding: '10px',
-                backgroundColor: '#3B82F6',
-                color: 'white',
-                border: 'none',
-                borderRadius: '5px',
-                cursor: 'pointer'
-              }}
-            >
-              Start Game
-            </button>
-          </>
-        )}
-        <div style={{textAlign: 'center', margin: '10px 0', color: '#666'}}>{message}</div>
-      </div>
-    ) : (
-      <div className="budget-game" style={{maxWidth: '400px', margin: '0 auto', padding: '20px', fontFamily: 'Arial, sans-serif'}}>
-        <h1 style={{textAlign: 'center', marginBottom: '20px'}}>Budget Adventure Game</h1>
-        <div style={{textAlign: 'center', marginBottom: '20px'}}>
-          <div style={{fontSize: '24px', fontWeight: 'bold'}}>Score: {score} 🌟</div>
-          <div>Streak: {streak} days 🔥</div>
-          <div>Current Month: {months[currentMonth]} {currentYear}</div>
-          <div style={{color: totalSpent <= totalIncome ? 'green' : 'red'}}>
-            Spent: ${totalSpent.toFixed(2)} / ${totalIncome.toFixed(2)}
           </div>
-          <div style={{color: (totalIncome - totalSpent) >= 0 ? 'green' : 'red'}}>
-            Remaining: ${(totalIncome - totalSpent).toFixed(2)}
+          <div style={{display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', marginBottom: '20px'}}>
+            {categories.map(category => (
+              <button
+                key={category.name}
+                onClick={() => handleCategoryClick(category)}
+                style={{
+                  width: '48%',
+                  margin: '5px 0',
+                  padding: '10px',
+                  backgroundColor: category.color,
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '5px',
+                  cursor: 'pointer'
+                }}
+              >
+                <div style={{fontSize: '24px'}}>{category.icon}</div>
+                <div>{category.name}</div>
+              </button>
+            ))}
           </div>
-        </div>
-        <div style={{marginBottom: '20px'}}>
-          <h3>Score Breakdown:</h3>
-          {Object.entries(scoreBreakdown).map(([key, value]) => (
-            <div key={key} style={{display: 'flex', justifyContent: 'space-between'}}>
-              <span>{key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}:</span>
-              <span>{value}</span>
-            </div>
-          ))}
-        </div>
-        <div style={{display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', marginBottom: '20px'}}>
-          {categories.map(category => (
+          <input
+            type="number"
+            value={inputAmount}
+            onChange={(e) => setInputAmount(e.target.value)}
+            placeholder="Enter amount"
+            style={{width: '100%', padding: '10px', marginBottom: '10px', boxSizing: 'border-box'}}
+          />
+          <button
+            onClick={handleAddExpense}
+            style={{
+              width: '100%',
+              padding: '10px',
+              backgroundColor: '#3B82F6',
+              color: 'white',
+              border: 'none',
+              borderRadius: '5px',
+              cursor: 'pointer',
+              marginBottom: '10px'
+            }}
+          >
+            Add Expense
+          </button>
+          <div style={{display: 'flex', justifyContent: 'space-between', marginBottom: '10px'}}>
             <button
-              key={category.name}
-              onClick={() => handleCategoryClick(category)}
+              onClick={handleClearGame}
               style={{
                 width: '48%',
-                margin: '5px 0',
                 padding: '10px',
-                backgroundColor: category.color,
+                backgroundColor: '#10B981',
                 color: 'white',
                 border: 'none',
                 borderRadius: '5px',
                 cursor: 'pointer'
               }}
             >
-              <div style={{fontSize: '24px'}}>{category.icon}</div>
-              <div>{category.name}</div>
+              Clear Month
             </button>
-          ))}
-        </div>
-        <input
-          type="number"
-          value={inputAmount}
-          onChange={(e) => setInputAmount(e.target.value)}
-          placeholder="Enter amount"
-          style={{width: '100%', padding: '10px', marginBottom: '10px', boxSizing: 'border-box'}}
-        />
-        <button
-          onClick={handleAddExpense}
-          style={{
-            width: '100%',
-            padding: '10px',
-            backgroundColor: '#3B82F6',
-            color: 'white',
-            border: 'none',
-            borderRadius: '5px',
-            cursor: 'pointer',
-            marginBottom: '10px'
-          }}
-        >
-          Add Expense
-        </button>
-        <div style={{display: 'flex', justifyContent: 'space-between', marginBottom: '10px'}}>
-          <button
-            onClick={handleClearGame}
-            style={{
-              width: '48%',
-              padding: '10px',
-              backgroundColor: '#10B981',
-              color: 'white',
-              border: 'none',
-              borderRadius: '5px',
-              cursor: 'pointer'
-            }}
-          >
-            Clear Month
-          </button>
-          <button
-            onClick={handleResetGame}
-            style={{
-              width: '48%',
-              padding: '10px',
-              backgroundColor: '#EF4444',
-              color: 'white',
-              border: 'none',
-              borderRadius: '5px',
-              cursor: 'pointer'
-            }}
-          >
-            Reset Game
-          </button>
-        </div>
-        <div style={{textAlign: 'center', margin: '10px 0', color: '#666'}}>{message}</div>
-        <div>
-          <h2>Expense Summary:</h2>
-          {expenses.map(exp => (
-            <div key={exp.name} style={{
-              display: 'flex', 
-              justifyContent: 'space-between', 
-              alignItems: 'center', 
-              marginBottom: '10px',
-              padding: '10px',
-              backgroundColor: '#f0f0f0',
-              borderRadius: '5px'
-            }}>
-              <span>{exp.icon} {exp.name}</span>
-              <span>${exp.spent.toFixed(2)} / ${exp.budget.toFixed(2)}</span>
-              <div>
-                <button 
-                  onClick={() => {
-                    const newAmount = prompt(`Enter new amount for ${exp.name}:`, exp.spent);
-                    if (newAmount !== null && !isNaN(newAmount)) {
-                      handleEditExpense(exp.name, newAmount);
-                    }
-                  }}
-                  style={{
-                    marginRight: '5px',
-                    padding: '5px 10px',
-                    backgroundColor: '#3B82F6',
-                    color: 'white',
-                    border: 'none',
-                    borderRadius: '3px',
-                    cursor: 'pointer'
-                  }}
-                >
-                  Edit
-                </button>
-                <button 
-                  onClick={() => {
-                    if (window.confirm(`Are you sure you want to delete the expense for ${exp.name}?`)) {
-                      handleDeleteExpense(exp.name);
-                    }
-                  }}
-                  style={{
-                    padding: '5px 10px',
-                    backgroundColor: '#EF4444',
-                    color: 'white',
-                    border: 'none',
-                    borderRadius: '3px',
-                    cursor: 'pointer'
-                  }}
-                >
-                  Delete
-                </button>
+            <button
+              onClick={handleResetGame}
+              style={{
+                width: '48%',
+                padding: '10px',
+                backgroundColor: '#EF4444',
+                color: 'white',
+                border: 'none',
+                borderRadius: '5px',
+                cursor: 'pointer'
+              }}
+            >
+              Reset Game
+            </button>
+          </div>
+          <div style={{textAlign: 'center', margin: '10px 0', color: '#666'}}>{message}</div>
+          <div>
+            <h2>Expense Summary:</h2>
+            {expenses.map(exp => (
+              <div key={exp.name} style={{
+                display: 'flex', 
+                justifyContent: 'space-between', 
+                alignItems: 'center', 
+                marginBottom: '10px',
+                padding: '10px',
+                backgroundColor: '#f0f0f0',
+                borderRadius: '5px'
+              }}>
+                <span>{exp.icon} {exp.name}</span>
+                <span>${exp.spent.toFixed(2)} / ${exp.budget.toFixed(2)}</span>
+                <div>
+                  <button 
+                    onClick={() => {
+                      const newAmount = prompt(`Enter new amount for ${exp.name}:`, exp.spent);
+                      if (newAmount !== null && !isNaN(newAmount)) {
+                        handleEditExpense(exp.name, newAmount);
+                      }
+                    }}
+                    style={{
+                      marginRight: '5px',
+                      padding: '5px 10px',
+                      backgroundColor: '#3B82F6',
+                      color: 'white',
+                      border: 'none',
+                      borderRadius: '3px',
+                      cursor: 'pointer'
+                    }}
+                  >
+                    Edit
+                  </button>
+                  <button 
+                    onClick={() => {
+                      if (window.confirm(`Are you sure you want to delete the expense for ${exp.name}?`)) {
+                        handleDeleteExpense(exp.name);
+                      }
+                    }}
+                    style={{
+                      padding: '5px 10px',
+                      backgroundColor: '#EF4444',
+                      color: 'white',
+                      border: 'none',
+                      borderRadius: '3px',
+                      cursor: 'pointer'
+                    }}
+                  >
+                    Delete
+                  </button>
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
+          <div>
+            <h2>Achievements:</h2>
+            {playerAchievements.map(achievement => (
+              <div key={achievement.name} style={{
+                display: 'flex',
+                alignItems: 'center',
+                marginBottom: '5px',
+                opacity: achievement.reached ? 1 : 0.5
+              }}>
+                <span style={{fontSize: '24px', marginRight: '10px'}}>{achievement.icon}</span>
+                <span>{achievement.name}: {achievement.description}</span>
+              </div>
+            ))}
+          </div>
         </div>
-        <div>
-          <h2>Achievements:</h2>
-          {playerAchievements.map(achievement => (
-            <div key={achievement.name} style={{
-              display: 'flex',
-              alignItems: 'center',
-              marginBottom: '5px',
-              opacity: achievement.reached ? 1 : 0.5
-            }}>
-              <span style={{fontSize: '24px', marginRight: '10px'}}>{achievement.icon}</span>
-              <span>{achievement.name}: {achievement.description}</span>
-            </div>
-          ))}
-        </div>
-      </div>
-    )}
-  </>
+      )}
+    </div>
+  </div>
 );
 };
 // Define your styles
