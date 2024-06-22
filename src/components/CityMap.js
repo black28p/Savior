@@ -32,14 +32,18 @@ const CityMap = ({ gameState, updateGameState }) => {
   };
 
   return (
-    <div className="mb-6 text-white">
-      <h2 className="text-xl font-semibold mb-2 text-blue-200">Prosperity City Map</h2>
-      <div className="grid grid-cols-3 gap-2">
+    <div className="mb-6 text-white bg-gray-800 p-4 rounded-lg">
+      <h2 className="text-lg sm:text-xl font-semibold mb-3 text-blue-200">Prosperity City Map</h2>
+      <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
         {locations.map(location => (
           <button
             key={location}
             onClick={() => handleLocationChange(location)}
-            className={`p-2 rounded ${gameState.currentLocation === location ? 'bg-blue-600 text-white' : 'bg-gray-700 text-gray-200 hover:bg-gray-600'}`}
+            className={`p-3 rounded text-sm sm:text-base ${
+              gameState.currentLocation === location 
+                ? 'bg-blue-600 text-white' 
+                : 'bg-gray-700 text-gray-200 hover:bg-gray-600'
+            }`}
           >
             {location}
           </button>

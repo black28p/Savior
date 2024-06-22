@@ -63,10 +63,10 @@ const GameSetup = ({ gameState, updateGameState }) => {
   };
 
   return (
-    <div className="font-sans text-white bg-gray-900 p-6 rounded-lg">
-      <h1 className="text-3xl font-bold text-center mb-6 text-blue-300">Financial Adventure: Road to Prosperity</h1>
+    <div className="font-sans text-white bg-gray-900 p-4 sm:p-6 rounded-lg">
+      <h1 className="text-2xl sm:text-3xl font-bold text-center mb-4 sm:mb-6 text-blue-300">Financial Adventure: Road to Prosperity</h1>
       {gameState.setupStep === 0 && (
-        <>
+        <div className="space-y-4">
           <p className="mb-4">Welcome, adventurer! Before you begin your journey in Prosperity City, let's set up your initial finances.</p>
           <input
             type="number"
@@ -76,21 +76,21 @@ const GameSetup = ({ gameState, updateGameState }) => {
               updateGameState({ incomeInput: e.target.value });
             }}
             placeholder="Enter your starting monthly income"
-            className="w-full p-2 mb-4 border rounded bg-gray-800 text-white border-gray-700"
+            className="w-full p-3 mb-4 border rounded bg-gray-800 text-white border-gray-700"
           />
           <button
             onClick={handleIncomeSubmit}
-            className="w-full p-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors"
+            className="w-full p-3 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors"
           >
             Set Starting Income
           </button>
-        </>
+        </div>
       )}
       {gameState.setupStep === 1 && (
         <CategorySelection gameState={gameState} updateGameState={updateGameState} />
       )}
       {gameState.setupStep === 2 && (
-        <>
+        <div className="space-y-4">
           <h2 className="text-xl font-semibold mb-4 text-blue-200">Allocate Your Monthly Budget</h2>
           {gameState.selectedCategories.map(cat => (
             <div key={cat.name} className="mb-4">
@@ -103,7 +103,7 @@ const GameSetup = ({ gameState, updateGameState }) => {
                   handleCategoryBudgetChange(cat.name, e.target.value);
                 }}
                 placeholder={`Enter budget for ${cat.name}`}
-                className="w-full p-2 border rounded bg-gray-800 text-white border-gray-700"
+                className="w-full p-3 border rounded bg-gray-800 text-white border-gray-700"
               />
             </div>
           ))}
@@ -112,11 +112,11 @@ const GameSetup = ({ gameState, updateGameState }) => {
               console.log('Submitting budgets');
               handleCategoryBudgetsSubmit();
             }}
-            className="w-full p-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors"
+            className="w-full p-3 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors"
           >
             Start Your Financial Adventure!
           </button>
-        </>
+        </div>
       )}
       <div className="text-center mt-4 text-red-400">{gameState.message}</div>
     </div>

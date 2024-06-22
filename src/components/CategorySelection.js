@@ -35,26 +35,27 @@ const CategorySelection = ({ gameState, updateGameState }) => {
   };
 
   return (
-    <div className="text-white">
-      <h2 className="text-xl font-semibold mb-4 text-blue-200">Select up to {GAME_CONSTANTS.MAX_CATEGORIES} Financial Categories</h2>
-      <div className="grid grid-cols-2 gap-2 mb-4">
+    <div className="text-white space-y-4">
+      <h2 className="text-lg sm:text-xl font-semibold mb-4 text-blue-200">Select up to {GAME_CONSTANTS.MAX_CATEGORIES} Financial Categories</h2>
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-4">
         {allCategories.map(category => (
           <button
             key={category.name}
             onClick={() => handleCategorySelection(category)}
-            className={`p-2 rounded ${
+            className={`p-3 rounded flex items-center justify-center ${
               gameState.selectedCategories.some(cat => cat.name === category.name)
                 ? `bg-${category.color} text-white` 
                 : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
             }`}
           >
-            {category.icon} {category.name}
+            <span className="mr-2">{category.icon}</span>
+            <span>{category.name}</span>
           </button>
         ))}
       </div>
       <button
         onClick={handleCategorySelectionComplete}
-        className="w-full p-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors"
+        className="w-full p-3 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors"
       >
         Continue to Budget Allocation
       </button>

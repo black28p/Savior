@@ -37,8 +37,8 @@ const BudgetAllocation = ({ gameState, setGameState }) => {
   };
 
   return (
-    <div className="text-white">
-      <h2 className="text-xl font-semibold mb-4 text-blue-200">Allocate Your Monthly Budget</h2>
+    <div className="text-white space-y-4">
+      <h2 className="text-lg sm:text-xl font-semibold mb-4 text-blue-200">Allocate Your Monthly Budget</h2>
       {gameState.selectedCategories.map(cat => (
         <div key={cat.name} className="mb-4">
           <label className="block mb-2 text-gray-300">{cat.name}</label>
@@ -47,13 +47,13 @@ const BudgetAllocation = ({ gameState, setGameState }) => {
             value={gameState.categoryInputs[cat.name]}
             onChange={(e) => handleCategoryBudgetChange(cat.name, e.target.value)}
             placeholder={`Enter budget for ${cat.name}`}
-            className="w-full p-2 border rounded bg-gray-800 text-white border-gray-700"
+            className="w-full p-3 border rounded bg-gray-800 text-white border-gray-700"
           />
         </div>
       ))}
       <button
         onClick={handleCategoryBudgetsSubmit}
-        className="w-full p-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors"
+        className="w-full p-3 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors"
       >
         Start Your Financial Adventure!
       </button>

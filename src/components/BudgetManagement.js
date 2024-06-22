@@ -34,18 +34,18 @@ const BudgetManagement = ({ gameState, updateGameState }) => {
   };
 
   return (
-    <div className="mb-6 text-white">
-      <h2 className="text-xl font-semibold mb-2 text-blue-200">Budget Management</h2>
-      <div className="grid grid-cols-2 gap-2 mb-4">
+    <div className="mb-6 text-white bg-gray-800 p-4 rounded-lg">
+      <h2 className="text-lg sm:text-xl font-semibold mb-3 text-blue-200">Budget Management</h2>
+      <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 mb-4">
         {(gameState.categories || []).map(category => (
           <button
             key={category.name}
             onClick={() => handleCategoryClick(category)}
-            className={`p-2 rounded text-white hover:opacity-80`}
+            className={`p-3 rounded text-white hover:opacity-80 flex flex-col items-center justify-center`}
             style={{backgroundColor: category.color}}
           >
-            <div className="text-2xl">{category.icon}</div>
-            <div>{category.name}</div>
+            <div className="text-2xl mb-1">{category.icon}</div>
+            <div className="text-sm">{category.name}</div>
           </button>
         ))}
       </div>
@@ -54,11 +54,11 @@ const BudgetManagement = ({ gameState, updateGameState }) => {
         value={gameState.inputAmount || ''}
         onChange={(e) => updateGameState(prevState => ({ ...prevState, inputAmount: e.target.value }))}
         placeholder="Enter amount"
-        className="w-full p-2 mb-2 border rounded bg-gray-800 text-white border-gray-700"
+        className="w-full p-3 mb-3 border rounded bg-gray-700 text-white border-gray-600"
       />
       <button
         onClick={handleAddExpense}
-        className="w-full p-2 mb-4 bg-green-600 text-white rounded hover:bg-green-700 transition-colors"
+        className="w-full p-3 mb-4 bg-green-600 text-white rounded hover:bg-green-700 transition-colors"
       >
         Add Expense
       </button>
