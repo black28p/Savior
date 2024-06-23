@@ -6,12 +6,22 @@ import CityMap from './CityMap';
 import BudgetManagement from './BudgetManagement';
 import ExpenseSummary from './ExpenseSummary';
 import Achievements from './Achievements';
+import { initialGameState } from '../config/gameConfig';
 
 const GameInterface = ({ gameState, updateGameState }) => {
   const handleResetGame = () => {
     if (window.confirm("Are you sure you want to reset the game? All progress will be lost.")) {
+      // Clear localStorage
       localStorage.clear();
-      window.location.reload();
+      
+      // Reset game state to initial state
+      updateGameState(initialGameState);
+      
+      // Optionally, you can add a message to indicate the game has been reset
+      updateGameState(prevState => ({
+        ...prevState,
+        message: "The game has been reset. Start your new financial adventure!"
+      }));
     }
   };
 
@@ -43,6 +53,10 @@ const GameInterface = ({ gameState, updateGameState }) => {
       >
         Reset Game
       </button>
+
+      {gameState.message && (
+        <p className="mt-4 text-center text-yellow-300">{gameState.message}</p>
+      )}
     </div>
   );
 };
