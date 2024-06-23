@@ -59,8 +59,11 @@ export const initialGameState = {
   incomeInput: '',
   currentLocation: 'Home',
   totalIncome: 0,
-  currentMonth: 0,
+  currentMonth: new Date().getMonth(),
   currentYear: new Date().getFullYear(),
+  gameStartDate: new Date().toISOString(),
+  lastPlayedDate: new Date().toISOString(),
+  daysPlayed: 0,
   totalSpent: 0,
   categoryInputs: {},
   selectedCategories: [],
@@ -74,6 +77,7 @@ export const initialGameState = {
   inputAmount: '',
   message: '',
   gameStarted: false,
+  streak: 0,
 };
 
 // Story templates
@@ -162,6 +166,33 @@ export const calculateScore = (gameState) => {
   return { newScore, newScoreBreakdown };
 };
 
+export const getFormattedDate = (month, year) => {
+  return new Date(year, month).toLocaleDateString('en-US', {
+    month: 'long',
+    year: 'numeric'
+  });
+};
+
+export const advanceGameTime = (gameState, daysToAdvance = 1) => {
+  const currentDate = new Date(gameState.currentYear, gameState.currentMonth, 1);
+  currentDate.setDate(currentDate.getDate() + daysToAdvance);
+
+  return {
+    ...gameState,
+    currentMonth: currentDate.getMonth(),
+    currentYear: currentDate.getFullYear(),
+    daysPlayed: gameState.daysPlayed + daysToAdvance,
+    lastPlayedDate: currentDate.toISOString()
+  };
+};
+
+export const getDaysSinceLastPlayed = (gameState) => {
+  const lastPlayed = new Date(gameState.lastPlayedDate);
+  const now = new Date();
+  const diffTime = Math.abs(now - lastPlayed);
+  return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+};
+
 export default {
   allCategories,
   achievements,
@@ -171,5 +202,8 @@ export default {
   initialGameState,
   storyTemplates,
   GAME_CONSTANTS,
-  calculateScore
+  calculateScore,
+  getFormattedDate,
+  advanceGameTime,
+  getDaysSinceLastPlayed
 };
