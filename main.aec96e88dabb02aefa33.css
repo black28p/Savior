@@ -575,6 +575,12 @@ video {
 .grow {
   flex-grow: 1;
 }
+.list-inside {
+  list-style-position: inside;
+}
+.list-disc {
+  list-style-type: disc;
+}
 .grid-cols-1 {
   grid-template-columns: repeat(1, minmax(0, 1fr));
 }
@@ -785,6 +791,10 @@ video {
   --tw-text-opacity: 1;
   color: rgb(255 255 255 / var(--tw-text-opacity));
 }
+.text-yellow-300 {
+  --tw-text-opacity: 1;
+  color: rgb(253 224 71 / var(--tw-text-opacity));
+}
 .opacity-100 {
   opacity: 1;
 }
@@ -838,6 +848,9 @@ video {
 .hover\:bg-red-700:hover {
   --tw-bg-opacity: 1;
   background-color: rgb(185 28 28 / var(--tw-bg-opacity));
+}
+.hover\:underline:hover {
+  text-decoration-line: underline;
 }
 .hover\:opacity-80:hover {
   opacity: 0.8;
@@ -934,4 +947,4 @@ video {
   }
 }
 
-/*# sourceMappingURL=main.2a9db6c589bcf177e870.css.map*/
+/*# sourceMappingURL=main.aec96e88dabb02aefa33.css.map*/
